@@ -14,7 +14,7 @@ namespace ClassRegisterProject
 
 
             // IsAlpha regex method to check that user input is alphabets
-           public static bool IsAlpha(string strToCheck)
+            public static bool IsAlpha(string strToCheck)
             {
                 Regex alphaPattern = new Regex("[^a-zA-Z]");
                 return !alphaPattern.IsMatch(strToCheck);
@@ -23,7 +23,7 @@ namespace ClassRegisterProject
             //Validate phone number
             public static bool ValidatePhone(string phoneNo)
             {
-            Regex phonePattern = new Regex(@"^([\+]?234[-]?|[0])?[0-9][0-9]{10}$");
+            Regex phonePattern = new Regex(@"^([\+]?234[-]|[0])[0-9]{10}$"); //simplified regex
             return !phonePattern.IsMatch(phoneNo);
             }
 
@@ -51,12 +51,12 @@ namespace ClassRegisterProject
             public static string[] CollectGadgets()
             {   
                 string[] gadgets = new string[3];
-
+                //This restricts a users gadget to 3. Not excatly practical
                 int i;
 
                 for (i = 0; i < gadgets.Length; i++)
                 {
-                    Console.Write("Enter Gadgets (Maximum of 3): ");
+                    Console.Write("Enter Gadgets (Maximum of 3): "); //This should be outside your loop
                     gadgets[i] = Console.ReadLine();
                 }
                     /*
@@ -95,7 +95,6 @@ namespace ClassRegisterProject
                         Console.WriteLine("No match found! Enter 'male', 'female' or 'other'");
                         return Gender.Other;
 
-
                 }
             }
 
@@ -111,14 +110,24 @@ namespace ClassRegisterProject
             string sanitizedPhoneNumber = "";
             string error = "";
 
-
-            if (IsAlpha(CollectFirstName())) { sanitizedFirstName = CollectFirstName(); }
-            else
+            do
             {
-                error = "Firstname must be valid letters[a-zA-Z]";
-                Console.WriteLine(error);
-            }
+                var firstname = CollectFirstName();
+                if (IsAlpha(firstname)) 
+                { 
+                    sanitizedFirstName = firstname;
+                    break;
+                } //You were calling your collectFirstName method twice, do this instead
+                else
+                {
+                    error = "Firstname must be valid letters[a-zA-Z]";
+                    Console.WriteLine(error);
 
+                    //introduced a loop to keep the user in the collect firstname method till they provide a valid firstname
+                }
+            } while (true);
+
+            //repeat similar action in following code
 
             if (IsAlpha(CollectLastName())) { sanitizedLastName = CollectLastName(); }
             else
@@ -145,7 +154,7 @@ namespace ClassRegisterProject
 
             Console.WriteLine("");
 
-
+            //You are using the same data for multiple students name and phone number
             Student student2 = new Student
             {
                 Firstname = sanitizedFirstName,
@@ -171,13 +180,13 @@ namespace ClassRegisterProject
                              }
             };
 
-            foreach (Student dev in students)
+            foreach (Student dev in students) //Your printClassDetails method below does this better. No need for duplication
             {
                 Console.WriteLine(dev);
             }
 
             DotNetClass netClass = new DotNetClass(students);
-            netClass.PrintClassDetails();
+            netClass.PrintClassDetails(); 
 
         }
 
